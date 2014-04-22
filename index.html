@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Javscript Linters</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/slides.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+                    <h2>Javscript Linters</h2>
+                    <p>
+                        <small><font class="blue">by Dmitrey Gerasimov</font></small>
+                    </p>
+                </section>
+                <section>
+                    <section>
+                        <h3>What is it?</h3>
+                        <img class="nodecorations" src="img/question-mark.png">
+                    </section>
+                    <section>
+                        <img src="img/crock.png">
+                    </section>
+                    <section>
+                        <h3>Suspicious code</h3>
+                        <pre><code>// Undefined variables
+function bad() {
+    return foo;
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>Suspicious code</h3>
+                        <pre><code class="language-javascript">// Lack of brackets
+if (someVal)
+    someVal += otherVal;
+    someVal++;
+    return someVal;</code></pre>
+                    </section>
+                    <section>
+                            Code Style
+                        <h3></h3>
+                        <pre><code class="language-javascript">
+//Invalid
+function BAD_func (b , c){
+      var a = 3333
+    return a;
+  }
+//Valid
+function goodFunc(b, c) {
+    var a = 3333;
+    return a;
+}
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3><a href="http://jslint.com" target="_blank">JsLint</a></h3>
+                        <ul>
+                            <li>http://jslint.com</li>
+                            <li>© Douglas Crockford, 2002</li>
+                            <li>enforcing "The Good Parts"</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3><a href="http://jshint.com" target="_blank">JsHint</a></h3>
+                        <ul>
+                            <li>http://jshint.org</li>
+                            <li>© Anton Kovalyov, 2010</li>
+                            <li>more configurable, less strict by default</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>How to use it</h3>
+                        <pre><code>$ npm install jshint -g</code></pre>
+                    </section>
+                    <section>
+                        <h3>.jshintrc</h3>
+                        <pre><code>{
+    "bitwise"       : true,
+    "camelcase"     : true,
+    "quotmark"      : "single",
+
+    "node": true,
+
+    "globals": {
+        "foo": true,
+        "bar": false // readonly
+    }
+}
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h3>Configuration per file</h3>
+                        <pre><code>/*globals foo: false, baz: false */
+/*jshint camelcase: false */
+
+var bar = 444;
+
+/* jshint ignore:start */
+foo = 777;
+var FooBar = 888;
+/* jshint ignore:end */</code></pre>
+                    </section>
+                    <section>
+                        <h3>Output</h3>
+                        <pre><code>var foo = function() {
+    return a;
+};</code></pre>
+<pre>jshint example.js
+
+example1.js: line 2, col 5, Missing "use strict" statement.
+example1.js: line 2, col 12, 'a' is not defined.
+example1.js: line 1, col 8, 'foo' is defined but never used.
+
+3 errors</pre>
+                    </section>
+                    <section>
+                        <h3>undef</h3>
+                        <p>
+                            <small>
+                                <font class="blue">Require all non-global variables to be declared (prevents global leaks)</font>
+                            </small>
+                        </p>
+                        <pre><code>// Not valid
+function bad() {
+    return foo;
+}
+// Valid
+function good() {
+    var foo;
+    return foo;
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>asi</h3>
+                        <p><small><font class="blue">Require semicolons</font></small></p>
+                        <pre><code>// Not valid
+function bad(baz) {
+    var foo = 5
+    return foo
+}
+// Valid
+function good() {
+    var foo = 5;
+    return foo;
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>curly</h3>
+                        <p><small><font class="blue">Require {} for every new block or scope</font></small></p>
+                        <pre><code>// Not valid
+function bad(baz) {
+    if (baz > 5)
+        return baz;
+    return 10;
+}
+// Valid
+function good() {
+    if (baz > 5) {
+        return baz;
+    }
+    return 10;
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>newcap</h3>
+                        <p>
+                            <small>
+                                <font class="blue">Require capitalization of all constructor functions</font>
+                            </small>
+                        </p>
+                        <pre><code>// Not valid
+var my_bar = new bar();
+// Valid
+var myBar = new Bar();</code></pre>
+                    </section>
+                    <section>
+                        <h3>quotmark</h3>
+                        <p><small><font class="blue">Quotation mark</small></font></p>
+                        <pre><code>// Not valid
+function bad(){
+return 'foo' + "bar";
+}
+// Valid
+function bad(){
+    return 'foo' + 'bar';
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>JSHint 3.0</h3>
+                        <ul>
+                            <li>more modular</li>
+                            <li>user rules</li>
+                            <li>get rid of code style checking</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3><a href="http://eslint.org" target="_blank">EsLint</a></h3>
+                        <ul>
+                            <li>working with AST</li>
+                            <li>more sofisticated and complex rules</li>
+                            <li>more robust alert levels (ignore, warning or error)</li>
+                            <li>99% rules of JSHint</li>
+                            <li>each rule in separate file</li>
+                            <li>environments with globals and rules</li>
+                            <li>user can write own rules</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>no-dupe-keys</h3>
+                        <p><small><font class="blue">Disallow duplicate keys</font></small></p>
+                        <pre><code>// Not valid
+var foo = {
+    bar: "baz",
+    bar: "qux"
+};
+// Valid
+var foo = {
+    bar: "baz"
+};</code></pre>
+                    </section>
+                    <section>
+                        <h3>block-scoped-vars</h3>
+                        <p><small><font class="blue">Threat var as block scoped</font></small></p>
+                        <pre><code>//Not valid
+function doSomething(a) {
+    if (a) {
+        var build = true;
+    }
+    console.log(build);
+}
+//Valid
+function doSomething(a) {
+    var build;
+    if (a) {
+        build = true;
+    }
+    console.log(build);</code></pre>
+                    </section>
+                    <section>
+                        <h3>consistent-this</h3>
+                        <p><small><font class="blue">Require consistent this</font></small></p>
+                        <pre><code>"consistent-this": [2, "self"]
+// Not valid
+var that = this;
+// Valid
+var self = this;</code></pre>
+                    </section>
+                    <section>
+                        <h3>func-style</h3>
+                        <p><small><font class="blue">Enforce function style</font></small></p>
+                        <pre><code>//Not valid
+function foo(){};
+//Valid
+var foo = function(){};</code></pre>
+                    </section>
+                    <section>
+                        <h3>radix</h3>
+                        <p><small><font class="blue">require radix for parseInt</font></small></p>
+                        <pre><code>//Not valid
+var a = parseInt("055");
+//Valid
+var a = parseInt("055", 10);</code></pre>
+                    </section>
+                    <section>
+                        <h3>Drawbacks</h3>
+                        <ul>
+                            <li>still in-dev</li>
+                            <li>does not support ES6+ (will be 0.5.0)</li>
+                            <li>a bit slow (5x JSHint)</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>JSCS</h3>
+                        <ul>
+                            <li>https://github.com/mdevils/node-jscs</li>
+                            <li>JavaScript Code Style checker</li>
+                            <li>based on Esprima</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>disallowImplicitTypeConversion</h3>
+                        <pre><code>//Not valid
+var a = !!someVar;
+var b = +someInt;
+var c = '' + someStr;
+//Valid
+var a = Boolean(someVar);
+var b = Integer(someInt);
+var c = String(someStr);</code></pre>
+                    </section>
+                    <section>
+                        <h3>requireCurlyBraces</h3>
+                        <p><small><font class="blue"></font>Requires curly braces after statements</small></p>
+                        <pre><code>{
+    "requireCurlyBraces": [
+        "if",
+        "else",
+        "for",
+        "while",
+        "do",
+        "try",
+        "catch"
+    ]
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>requireSpaceAfterKeywords, disallowSpaceAfterKeywords</h3>
+                        <p><small><font class="blue"></font></small></p>
+                        <pre><code>{
+    "requireSpaceAfterKeywords": [
+        "if",
+        "else",
+        "for",
+        "while",
+        "do",
+        "switch",
+        "return",
+        "try",
+        "catch",
+        "case"
+    ],
+    "disallowSpaceAfterKeywords": [
+        "default"
+    ]</code></pre>
+                    </section>
+                    <section>
+                        <h3>All code style</h3>
+                        <ul>
+                            <li>validateLineBreaks</li>
+                            <li>validateQuoteMarks</li>
+                            <li>validateIndentation</li>
+                            <li>disallowMixedSpacesAndTabs</li>
+                            <li>disallowTrailingWhitespace</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>Fix it, Felix</h3>
+                        <img class="nodecorations" src="img/felix.png">
+                    </section>
+                    <section>
+                        <h3><a href="http://http://editorconfig.org/" target="_blank">EditorConfig</a></h3>
+                        <ul>
+                            <li>simple format</li>
+                            <li>claims to become a standard</li>
+                            <li>file .editorconfig for project and plugins for almost all IDEs</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>options</h3>
+                        <pre><code>root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{md,jade}]
+trim_trailing_whitespace = false</code></pre>
+                    </section>
+                    <section>
+                        <h3>JS Beautifier</h3>
+                        <ul>
+                            <li>http://jsbeautifier.org</li>
+                            <li>whitespaces and newlines</li>
+                            <li>based on tokens</li>
+                            <li>stable, in general</li>
+                            <li>not very configurable :(</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Favorite rules</h3>
+                        <pre><code>{
+    "indent_size": 4,
+    "indent_char": " ",
+    "indent_level": 0,
+
+    "preserve_newlines": true,
+    "max_preserve_newlines": 2,
+
+    "jslint_happy": false,
+    "brace_style": "collapse",
+
+    "keep_array_indentation": false,
+    "keep_function_indentation": false,
+    "space_before_conditional": true,
+    "space_in_paren": false,
+}</code></pre>
+                    </section>
+                    <section>
+                        <h3>Example</h3>
+                        <pre><code>// Before
+var a   = 33;
+var obj = { a :  33,
+    b: "bzzz"
+    };
+if(a>3){console.log( a);}
+// After
+var a = 33;
+var obj = {
+    a: 33,
+    b: "bzzz"
+};
+if (a > 3) {
+    console.log(a);
+}</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <h1>Thank you</h1>
+                </section>
+            </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
